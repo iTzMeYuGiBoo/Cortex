@@ -76,9 +76,7 @@ public class EmailService {
                     deepLink
             );
 
-            // TODO: Integrate with SendGrid / AWS SES / Gmail API
-            log.info("[Email] Sending comment notification to: {}", recipientEmail);
-            // sendEmail(recipientEmail, subject, body);
+            sendEmail(recipientEmail, subject, body);
             
         } catch (Exception e) {
             log.error("[Email] Failed to send comment notification", e);
@@ -106,8 +104,7 @@ public class EmailService {
             String subject = senderName + " shared a highlight with you";
             String body = buildHighlightSharedBody(senderName, highlightText, deepLink);
 
-            log.info("[Email] Sending highlight shared notification to: {}", recipientEmail);
-            // sendEmail(recipientEmail, subject, body);
+            sendEmail(recipientEmail, subject, body);
             
         } catch (Exception e) {
             log.error("[Email] Failed to send highlight shared notification", e);
@@ -125,8 +122,9 @@ public class EmailService {
                 return;
             }
 
-            log.info("[Email] Sending verification email to: {}", email);
-            // sendEmail(email, "Verify your Cortex account", ...);
+            String subject = "Verify your Cortex account";
+            String body = "Please click the following link to verify your account: " + verificationLink;
+            sendEmail(email, subject, body);
             
         } catch (Exception e) {
             log.error("[Email] Failed to send verification email", e);
@@ -160,8 +158,7 @@ public class EmailService {
             String subject = "Your shared folder \"" + folderName + "\" was deleted by " + editorName;
             String body = buildEditorDeletedFolderBody(editorName, folderName, restoreLink);
 
-            log.info("[Email] Sending editor-deleted-folder notification to owner: {} (folder={})", ownerEmail, folderId);
-            // sendEmail(ownerEmail, subject, body);
+            sendEmail(ownerEmail, subject, body);
 
         } catch (Exception e) {
             log.error("[Email] Failed to send editor-deleted-folder notification for folder={}", folderId, e);
@@ -266,9 +263,7 @@ public class EmailService {
             String subject  = granterName + " shared \"" + folderName + "\" with you on Cortex";
             String body     = buildFolderAccessGrantedBody(granterName, folderName, deepLink);
 
-            log.info("[Email] Sending folder-access-granted email to {} (folder={})",
-                    obfuscate(recipientEmail), folderId);
-            // sendEmail(recipientEmail, subject, body);
+            sendEmail(recipientEmail, subject, body);
 
         } catch (Exception e) {
             log.error("[Email] ⚠ SMTP failure — folder-access-granted to {} folder={}: {}",
@@ -314,15 +309,26 @@ public class EmailService {
             String body     = buildActivityDigestBody(
                     editorName, folderName, actionCount, firstActionAt, lastActionAt, deepLink);
 
-            log.info("[Email] Sending activity digest to {} — editor='{}' folder='{}' actions={}",
-                    obfuscate(ownerEmail), editorName, folderName, actionCount);
-            // sendEmail(ownerEmail, subject, body);
+            sendEmail(ownerEmail, subject, body);
 
         } catch (Exception e) {
             log.error("[Email] ⚠ SMTP failure — activity digest to {} folder={}: {}",
                     obfuscate(ownerEmail), folderId, e.getMessage(), e);
             // Swallowed: email failure must NOT prevent the batch row from being marked processed
         }
+    }
+
+    /**
+     * Internal method to actually send the email.
+     * Centralizes the mock logging and serves as the single integration point
+     * for future third-party email providers.
+     */
+    private void sendEmail(String to, String subject, String body) {
+        log.info("[Email] Sending email to: {}", obfuscate(to));
+        log.debug("[Email] Subject: {}", subject);
+        log.debug("[Email] Body snippet: {}", body.length() > 50 ? body.substring(0, 50) + "..." : body);
+
+        // TODO: Integrate with SendGrid / AWS SES / Gmail API
     }
 
     // ── Template Builders ────────────────────────────────────────────────────
