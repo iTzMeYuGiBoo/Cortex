@@ -16,7 +16,7 @@ import java.io.Serializable;
  * can be associated with highlights.
  */
 @Entity
-@Table(name = "highlight_tags")
+@Table(name = "highlight_tag")
 @IdClass(HighlightTagId.class)
 public class HighlightTag implements Serializable {
 

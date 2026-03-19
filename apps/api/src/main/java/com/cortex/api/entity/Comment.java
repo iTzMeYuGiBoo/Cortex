@@ -18,7 +18,7 @@ import java.time.Instant;
  * Only users with OWNER or EDITOR access can post comments.
  */
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 public class Comment {
 
     @Id

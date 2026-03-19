@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "folders", uniqueConstraints = {
+@Table(name = "folder", uniqueConstraints = {
     @UniqueConstraint(name = "uk_folder_user_parent_name",
             columnNames = {"user_id", "parent_folder_id", "name"})
 })

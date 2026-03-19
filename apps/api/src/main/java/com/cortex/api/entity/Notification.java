@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Table(name = "notifications")
+@Table(name = "notification")
 public class Notification {
 
     @Id

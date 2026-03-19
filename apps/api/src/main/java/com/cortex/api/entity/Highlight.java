@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "highlights")
+@Table(name = "highlight")
 public class Highlight {
 
     @Id
